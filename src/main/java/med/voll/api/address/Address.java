@@ -5,6 +5,7 @@ import lombok.*;
 
 @Embeddable
 @Getter
+@NoArgsConstructor
 @AllArgsConstructor
 public class Address {
     private String street;
@@ -13,7 +14,6 @@ public class Address {
     private String number;
     private String complement;
 
-    public Address(){}
     public Address(AddressDto addressDto) {
          this.street = addressDto.street();
          this.district = addressDto.district();
@@ -21,5 +21,14 @@ public class Address {
          this.number = addressDto.number();
          this.complement = addressDto.complement();
         
+    }
+
+    public Address update(AddressDto address) {
+        this.street = address.street();
+        this.district = address.district();
+        this.city = address.city();
+        this.number = address.number();
+        this.complement = address.complement();
+        return this;
     }
 }
