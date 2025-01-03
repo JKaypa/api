@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 
@@ -36,8 +37,8 @@ public class DoctorController {
 
     @DeleteMapping("/{id}")
     @Transactional
-    public void deleteDoctor(@PathVariable Long id){
-        var doctor = doctorRepository.getReferenceById(id);
-        doctor.logicDelete();
+    public ResponseEntity deleteDoctor(@PathVariable Long id){
+        doctorRepository.getReferenceById(id).logicDelete();
+        return ResponseEntity.noContent().build();
     }
 }
