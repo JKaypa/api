@@ -1,4 +1,4 @@
-package med.voll.api.doctor;
+package med.voll.api.domain.doctor;
 
 public record DoctorResponseDto(Long id, String name, String email, String specialty, String idNumber) {
     public DoctorResponseDto(Doctor doctor) {

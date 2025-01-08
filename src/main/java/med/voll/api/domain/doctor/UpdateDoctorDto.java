@@ -1,6 +1,6 @@
-package med.voll.api.doctor;
+package med.voll.api.domain.doctor;
 
-import med.voll.api.address.AddressDto;
+import med.voll.api.domain.address.AddressDto;
 
 public record UpdateDoctorDto(String name, String idNumber, AddressDto address) {
 }
