@@ -4,13 +4,13 @@ import jakarta.validation.constraints.NotBlank;
 
 public record AddressDto(
         @NotBlank
-        String street,
+        String city,
 
         @NotBlank
         String district,
 
         @NotBlank
-        String city,
+        String street,
         String number,
         String complement
 ) {}
