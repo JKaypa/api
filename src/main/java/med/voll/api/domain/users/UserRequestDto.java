@@ -1,4 +1,11 @@
 package med.voll.api.domain.users;
 
-public record UserRequestDto() {
+import jakarta.validation.constraints.NotNull;
+
+public record UserRequestDto(
+        @NotNull
+        String username,
+
+        @NotNull
+        String password) {
 }
