@@ -15,10 +15,11 @@ import java.time.ZoneOffset;
 
 @Service
 public class TokenService {
-    @Value("${SECRET}")
+    @Value("${api.security.secret}")
     private String secret;
 
     public String generateToken(Users user){
+
         try {
             Algorithm algorithm = Algorithm.HMAC256(secret);
             return JWT.create()
