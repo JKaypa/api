@@ -50,4 +50,14 @@ public class ConsultationService {
       );
   }
 
+  public void cancelConsultation(CancelAppointmentRequestDto cancellation){
+    if(!consultationRepository.existsById(cancellation.idConsultation())){
+      throw new NotFoundException("Consultation not found");
+    }
+
+    var consultation = consultationRepository.getReferenceById(cancellation.idConsultation());
+
+    consultation.cancel(cancellation.reason());
+      
+  }
 }
