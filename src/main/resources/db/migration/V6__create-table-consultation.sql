@@ -7,5 +7,5 @@ create table consultation(
 
     primary key(id),
     constraint fk_consultation_doctor_id foreign key(doctor_id) references doctor(id),
-    constraint fk_consultation_patient_id foreign key(patient_id) references patient_id
+    constraint fk_consultation_patient_id foreign key(patient_id) references patient(id)
 );
