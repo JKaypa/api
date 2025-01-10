@@ -1,0 +1,1 @@
+alter table consultation add cancel_reason varchar(500);
