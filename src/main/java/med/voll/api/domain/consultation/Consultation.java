@@ -1,6 +1,7 @@
 package med.voll.api.domain.consultation;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -30,10 +31,16 @@ public class Consultation {
 
     private LocalDateTime date;
 
+    private CancelReason cancelReason;
+
     public Consultation(Doctor doctor, Patient patient, LocalDateTime date) {
         this.doctor = doctor;
         this.patient = patient;
         this.date = date;
+    }
+
+    public void cancel(CancelReason reason) {
+        this.cancelReason = reason;
     }
 
 }
