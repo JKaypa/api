@@ -30,5 +30,10 @@ public class Consultation {
 
     private LocalDateTime date;
 
+    public Consultation(Doctor doctor, Patient patient, LocalDateTime date) {
+        this.doctor = doctor;
+        this.patient = patient;
+        this.date = date;
+    }
 
 }
