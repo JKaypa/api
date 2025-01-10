@@ -27,7 +27,6 @@ import med.voll.api.domain.patient.PatientRepository;
 import med.voll.api.domain.patient.PatientResponseDto;
 import med.voll.api.domain.patient.UpdatePatientDto;
 
-
 @RestController
 @RequestMapping("/patient")
 public class PatientController {
@@ -35,7 +34,8 @@ public class PatientController {
     private PatientRepository patientRepository;
 
     @PostMapping
-    public ResponseEntity<PatientResponseDto> postPatient(@RequestBody @Valid PatientDto patientDto, UriComponentsBuilder uriBuilder){
+    public ResponseEntity<PatientResponseDto> postPatient(@RequestBody @Valid PatientDto patientDto,
+            UriComponentsBuilder uriBuilder) {
         var patient = new Patient(patientDto);
         var newPatient = patientRepository.save(patient);
         URI uri = uriBuilder.path("/patient/{id}").buildAndExpand(newPatient.getId()).toUri();
@@ -43,18 +43,19 @@ public class PatientController {
     }
 
     @GetMapping
-    public Page<PatientResponseDto> getPatient(@PageableDefault(sort = "name") Pageable pagination){
+    public Page<PatientResponseDto> getPatient(@PageableDefault(sort = "name") Pageable pagination) {
         return patientRepository.findAllByActiveTrue(pagination).map(PatientResponseDto::new);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<PatientDetailDto> getPatientById(@PathVariable Long id){
+    public ResponseEntity<PatientDetailDto> getPatientById(@PathVariable Long id) {
         return ResponseEntity.ok(new PatientDetailDto(patientRepository.getReferenceById(id)));
     }
 
     @PutMapping("/{id}")
     @Transactional
-    public ResponseEntity<PatientResponseDto> updatePatient(@RequestBody @Valid UpdatePatientDto updatePatientDto, @PathVariable Long id){
+    public ResponseEntity<PatientResponseDto> updatePatient(@RequestBody @Valid UpdatePatientDto updatePatientDto,
+            @PathVariable Long id) {
         var patient = patientRepository.getReferenceById(id);
         patient.update(updatePatientDto);
         return ResponseEntity.ok(new PatientResponseDto(patient));
@@ -63,7 +64,7 @@ public class PatientController {
     @DeleteMapping("/{id}")
     @Secured("ROLE_admin")
     @Transactional
-    public ResponseEntity<Void> deletePatient(@PathVariable Long id){
+    public ResponseEntity<Void> deletePatient(@PathVariable Long id) {
         patientRepository.getReferenceById(id).logicDelete();
 
         return ResponseEntity.noContent().build();
