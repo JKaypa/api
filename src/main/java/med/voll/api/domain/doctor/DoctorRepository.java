@@ -22,4 +22,6 @@ public interface DoctorRepository extends JpaRepository<Doctor, Long> {
             LIMIT 1
             """)
     Doctor findAvailableRandomDoctorBySpecialty(Specialty specialty, LocalDateTime date);
+
+    boolean findActiveById(Long idDoctor);
 }
