@@ -14,7 +14,6 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import java.net.URI;
 
-
 @RestController
 @RequestMapping("/doctor")
 public class DoctorController {
@@ -22,7 +21,8 @@ public class DoctorController {
     private DoctorRepository doctorRepository;
 
     @PostMapping
-    public ResponseEntity<DoctorResponseDto> postDoctor(@RequestBody @Valid DoctorDto doctorDto, UriComponentsBuilder uriBuilder){
+    public ResponseEntity<DoctorResponseDto> postDoctor(@RequestBody @Valid DoctorDto doctorDto,
+            UriComponentsBuilder uriBuilder) {
         var doctor = new Doctor(doctorDto);
         var newDoctor = doctorRepository.save(doctor);
         URI uri = uriBuilder.path("/doctor/{id}").buildAndExpand(newDoctor.getId()).toUri();
@@ -30,18 +30,19 @@ public class DoctorController {
     }
 
     @GetMapping
-    public Page<DoctorResponseDto> getDoctors(@PageableDefault(sort = "name") Pageable pagination){
+    public Page<DoctorResponseDto> getDoctors(@PageableDefault(sort = "name") Pageable pagination) {
         return doctorRepository.findAllByActiveTrue(pagination).map(DoctorResponseDto::new);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<DoctorDetailDto> getDoctorById(@PathVariable Long id){
+    public ResponseEntity<DoctorDetailDto> getDoctorById(@PathVariable Long id) {
         return ResponseEntity.ok(new DoctorDetailDto(doctorRepository.getReferenceById(id)));
     }
 
     @PutMapping("/{id}")
     @Transactional
-    public ResponseEntity<DoctorResponseDto> updateDoctor(@RequestBody @Valid UpdateDoctorDto updateDoctorDto, @PathVariable Long id){
+    public ResponseEntity<DoctorResponseDto> updateDoctor(
+            @RequestBody @Valid UpdateDoctorDto updateDoctorDto, @PathVariable Long id) {
         var doctor = doctorRepository.getReferenceById(id);
         doctor.update(updateDoctorDto);
         return ResponseEntity.ok(new DoctorResponseDto(doctor));
@@ -50,9 +51,9 @@ public class DoctorController {
     @DeleteMapping("/{id}")
     @Secured("ROLE_admin")
     @Transactional
-    public ResponseEntity<Void> deleteDoctor(@PathVariable Long id){
+    public ResponseEntity<Void> deleteDoctor(@PathVariable Long id) {
         doctorRepository.getReferenceById(id).logicDelete();
-        
+
         return ResponseEntity.noContent().build();
     }
 }

@@ -1,10 +1,10 @@
 package med.voll.api.domain.consultation;
 
+import med.voll.api.domain.doctor.DoctorRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import med.voll.api.domain.doctor.Doctor;
-import med.voll.api.domain.doctor.DoctorRepository;
 import med.voll.api.domain.patient.PatientRepository;
 import med.voll.api.infra.errors.NotFoundException;
 
@@ -35,29 +35,27 @@ public class ConsultationService {
     consultationRepository.save(consultation);
   }
 
-  public Doctor chooseDoctor(AppointmentRequestDto appointment){
-    if(appointment.idDoctor() != null){
+  public Doctor chooseDoctor(AppointmentRequestDto appointment) {
+    if (appointment.idDoctor() != null) {
       return doctorRepository.getReferenceById(appointment.idDoctor());
     }
 
-    if(appointment.specialty() == null){
+    if (appointment.specialty() == null) {
       throw new NotFoundException("You most provide a specialty if doctor it's not provided");
     }
 
-    return doctorRepository.findAvailableRandomDoctorBySpecialty(
-      appointment.specialty(), 
-      appointment.date()
-      );
+    return doctorRepository.findAvailableRandomDoctorBySpecialty(appointment.specialty(),
+        appointment.date());
   }
 
-  public void cancelConsultation(CancelAppointmentRequestDto cancellation){
-    if(!consultationRepository.existsById(cancellation.idConsultation())){
+  public void cancelConsultation(CancelAppointmentRequestDto cancellation) {
+    if (!consultationRepository.existsById(cancellation.idConsultation())) {
       throw new NotFoundException("Consultation not found");
     }
 
     var consultation = consultationRepository.getReferenceById(cancellation.idConsultation());
 
     consultation.cancel(cancellation.reason());
-      
+
   }
 }
