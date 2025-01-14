@@ -4,11 +4,13 @@ import java.time.Duration;
 import java.time.LocalDateTime;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import med.voll.api.domain.consultation.Consultation;
 import med.voll.api.domain.consultation.ConsultationRepository;
 import med.voll.api.infra.errors.BusinessRuleException;
 
+@Component
 public class CancellationBefore24hValidation {
 
 	@Autowired
