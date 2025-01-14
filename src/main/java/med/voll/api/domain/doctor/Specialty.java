@@ -1,4 +1,4 @@
-package med.voll.api.domain.doctor;
+    package med.voll.api.domain.doctor;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 
@@ -25,6 +25,6 @@ public enum Specialty {
                 return value;
             }
         }
-        throw new IllegalArgumentException("Enum specialty argument in not correct: " + specialty);
+        throw new IllegalArgumentException("Enum specialty argument is not correct: " + specialty);
     }
 }
