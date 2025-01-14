@@ -7,6 +7,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import med.voll.api.domain.consultation.validations.CancellationBefore24hValidation;
 import med.voll.api.domain.consultation.validations.ConsultationValidator;
 import med.voll.api.domain.doctor.Doctor;
 import med.voll.api.domain.patient.PatientRepository;
@@ -26,25 +27,35 @@ public class ConsultationService {
   @Autowired
   private List<ConsultationValidator> validators;
 
-  public void bookingConsultation(AppointmentRequestDto appointment) {
+  @Autowired
+  private CancellationBefore24hValidation cancellationValidation;
+
+  public AppointmentResponseDto bookingConsultation(AppointmentRequestDto appointment) {
     if (appointment.idDoctor() != null && !doctorRepository.existsById(appointment.idDoctor())) {
       throw new NotFoundException("Doctor not found");
     }
+
     if (!patientRepository.existsById(appointment.idPatient())) {
       throw new NotFoundException("Patient not found");
     }
 
-    validators.forEach(validator  -> validator.validate(appointment));
-    
+    validators.forEach(validator -> validator.validate(appointment));
+
     var doctor = chooseDoctor(appointment);
+
+    if (doctor == null) {
+      throw new NotFoundException("There are not doctors available for this specialty at this time");
+    }
+
     var patient = patientRepository.getReferenceById(appointment.idPatient());
     var date = appointment.date();
 
     var consultation = new Consultation(doctor, patient, date);
-    consultationRepository.save(consultation);
+    var newConsultation = consultationRepository.save(consultation);
+    return new AppointmentResponseDto(newConsultation);
   }
 
-  public Doctor chooseDoctor(AppointmentRequestDto appointment) {
+  private Doctor chooseDoctor(AppointmentRequestDto appointment) {
     if (appointment.idDoctor() != null) {
       return doctorRepository.getReferenceById(appointment.idDoctor());
     }
@@ -57,14 +68,17 @@ public class ConsultationService {
         appointment.date());
   }
 
-  public void cancelConsultation(CancelAppointmentRequestDto cancellation) {
+  public CancelAppointmentResponseDto cancelConsultation(CancelAppointmentRequestDto cancellation) {
     if (!consultationRepository.existsById(cancellation.idConsultation())) {
       throw new NotFoundException("Consultation not found");
     }
 
     var consultation = consultationRepository.getReferenceById(cancellation.idConsultation());
 
-    consultation.cancel(cancellation.reason());
+    cancellationValidation.validate(consultation);
 
+    consultation.cancel(cancellation.reason());
+    var cancelled = consultationRepository.save(consultation);
+    return new CancelAppointmentResponseDto(cancelled);
   }
 }
