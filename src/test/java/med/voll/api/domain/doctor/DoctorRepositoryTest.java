@@ -35,16 +35,26 @@ class DoctorRepositoryTest {
 
   @Test
 	@DisplayName("Should return null when a doctor exists but is not available in that date")
-  void testFindAvailableRandomDoctorBySpecialty() {
+  void testFindAvailableRandomDoctorBySpecialtyScenario1() {
 		var nexMondayAt10 = LocalDate.now().with(TemporalAdjusters.next(DayOfWeek.MONDAY)).atTime(10, 0);
 		var doctor = saveDoctor("Doctor1", "doctor1@email.com", "123456789", Specialty.CARDIOLOGY);
 		var patient = savePatient("Patient1", "patient1@email.com", "987654321");
-
 		scheduleAppointment(doctor, patient, nexMondayAt10);
-		
+
 		var availableDoctor = doctorRepository.findAvailableRandomDoctorBySpecialty(Specialty.CARDIOLOGY, nexMondayAt10);
 
 		assertThat(availableDoctor).isNull();
+  }
+
+	@Test
+	@DisplayName("Should return a doctor when exists and is available in that date")
+  void testFindAvailableRandomDoctorBySpecialtyScenario2() {
+		var nexMondayAt10 = LocalDate.now().with(TemporalAdjusters.next(DayOfWeek.MONDAY)).atTime(10, 0);
+		var doctor = saveDoctor("Doctor1", "doctor1@email.com", "123456789", Specialty.CARDIOLOGY);
+		
+		var availableDoctor = doctorRepository.findAvailableRandomDoctorBySpecialty(Specialty.CARDIOLOGY, nexMondayAt10);
+
+		assertThat(availableDoctor).isEqualTo(doctor);
   }
 
 	private void scheduleAppointment(Doctor doctor, Patient patient, LocalDateTime date) {
